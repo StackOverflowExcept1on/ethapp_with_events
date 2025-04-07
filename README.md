@@ -49,10 +49,16 @@ $ anvil
 
 ```shell
 $ source .env
-$ forge script script/Counter.s.sol:CounterScript --rpc-url $MAINNET_RPC_URL --broadcast --verify -vvvv
-$ forge script script/Counter.s.sol:CounterScript --rpc-url $SEPOLIA_RPC_URL --broadcast --verify -vvvv
-$ forge script script/Counter.s.sol:CounterScript --rpc-url $HOLESKY_RPC_URL --broadcast --verify -vvvv
-$ forge script script/Counter.s.sol:CounterScript --rpc-url $HOODI_RPC_URL --broadcast --verify -vvvv
+
+$ forge script script/EthAppWithEventsAbi.s.sol:EthAppWithEventsAbiScript --rpc-url $MAINNET_RPC_URL --broadcast --verify -vvvv
+$ forge script script/EthAppWithEventsAbi.s.sol:EthAppWithEventsAbiScript --rpc-url $SEPOLIA_RPC_URL --broadcast --verify -vvvv
+$ forge script script/EthAppWithEventsAbi.s.sol:EthAppWithEventsAbiScript --rpc-url $HOLESKY_RPC_URL --broadcast --verify -vvvv
+$ forge script script/EthAppWithEventsAbi.s.sol:EthAppWithEventsAbiScript --rpc-url $HOODI_RPC_URL --broadcast --verify -vvvv
+
+$ forge script script/EthAppWithEventsCaller.s.sol:EthAppWithEventsCallerScript --rpc-url $MAINNET_RPC_URL --broadcast --verify -vvvv
+$ forge script script/EthAppWithEventsCaller.s.sol:EthAppWithEventsCallerScript --rpc-url $SEPOLIA_RPC_URL --broadcast --verify -vvvv
+$ forge script script/EthAppWithEventsCaller.s.sol:EthAppWithEventsCallerScript --rpc-url $HOLESKY_RPC_URL --broadcast --verify -vvvv
+$ forge script script/EthAppWithEventsCaller.s.sol:EthAppWithEventsCallerScript --rpc-url $HOODI_RPC_URL --broadcast --verify -vvvv
 ```
 
 ### Cast
