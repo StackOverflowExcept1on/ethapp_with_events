@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.28;
+pragma solidity ^0.8.30;
 
-import {Test, console} from "forge-std/Test.sol";
+import {Test} from "forge-std/Test.sol";
 import {EthAppWithEventsAbi} from "../src/EthAppWithEventsAbi.sol";
-import {IEthAppWithEvents, EthAppWithEventsCaller} from "../src/EthAppWithEventsCaller.sol";
+import {EthAppWithEventsCaller} from "../src/EthAppWithEventsCaller.sol";
 
 contract EthAppWithEventsCallerTest is Test {
     EthAppWithEventsCaller public ethAppWithEventsCaller;

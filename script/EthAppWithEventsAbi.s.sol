@@ -1,13 +1,14 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.28;
+pragma solidity ^0.8.30;
 
+import {CommonBase} from "forge-std/Base.sol";
 import {Script, console} from "forge-std/Script.sol";
 import {IEthAppWithEvents, EthAppWithEventsAbi} from "../src/EthAppWithEventsAbi.sol";
 import {IMirror} from "../src/IMirror.sol";
 import {IRouter} from "../src/IRouter.sol";
 import {IWrappedVara} from "../src/IWrappedVara.sol";
 
-contract EthAppWithEventsAbiScript is Script {
+contract EthAppWithEventsAbiScript is CommonBase, Script {
     function setUp() public virtual {}
 
     function run() public virtual {
@@ -97,12 +98,14 @@ contract EthAppWithEventsAbiScript is Script {
         IWrappedVara wrappedVara = IWrappedVara(router.wrappedVara());
 
         if (constructorBalance != 0) {
-            wrappedVara.transfer(caller, constructorBalance);
+            bool success = wrappedVara.transfer(caller, constructorBalance);
+            require(success, "Transfer failed");
         }
     }
 
     function printContractInfo(string memory contractName, address contractAddress, address expectedImplementation)
         public
+        view
     {
         console.log("================================================================================================");
         console.log("[ CONTRACT  ]", contractName);
@@ -117,12 +120,9 @@ contract EthAppWithEventsAbiScript is Script {
         if (chainId == 1) {
             console.log("curl --request POST 'https://api.etherscan.io/api' \\");
         } else {
-            // https://github.com/foundry-rs/forge-std/issues/671
             console.log(
                 string.concat(
-                    "curl --request POST 'https://api-",
-                    chainId == 560048 ? "hoodi" : getChain(chainId).chainAlias,
-                    ".etherscan.io/api' \\"
+                    "curl --request POST 'https://api-", vm.getChain(chainId).chainAlias, ".etherscan.io/api' \\"
                 )
             );
         }

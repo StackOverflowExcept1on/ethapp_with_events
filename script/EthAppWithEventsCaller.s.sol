@@ -1,11 +1,8 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.28;
+pragma solidity ^0.8.30;
 
-import {Script, console} from "forge-std/Script.sol";
 import {EthAppWithEventsAbiScript} from "./EthAppWithEventsAbi.s.sol";
-import {EthAppWithEventsAbi} from "../src/EthAppWithEventsAbi.sol";
 import {IEthAppWithEvents, EthAppWithEventsCaller} from "../src/EthAppWithEventsCaller.sol";
-import {IRouter} from "../src/IRouter.sol";
 
 contract EthAppWithEventsCallerScript is EthAppWithEventsAbiScript {
     function setUp() public override {}
