@@ -79,26 +79,14 @@ contract EthAppWithEventsAbiScript is CommonBase, Script {
     }
 
     function callConstructorWithValue(address mirror, uint128 constructorBalance) public {
-        address routerAddress = IMirror(mirror).router();
-
-        IRouter router = IRouter(routerAddress);
-        IWrappedVara wrappedVara = IWrappedVara(router.wrappedVara());
-
         if (constructorBalance != 0) {
-            wrappedVara.approve(mirror, constructorBalance);
-
-            IEthAppWithEvents(mirror).create(constructorBalance, false);
+            IEthAppWithEvents(mirror).create{value: constructorBalance}(false);
         }
     }
 
-    function transferValueToCaller(address mirror, address caller, uint128 constructorBalance) public {
-        address routerAddress = IMirror(mirror).router();
-
-        IRouter router = IRouter(routerAddress);
-        IWrappedVara wrappedVara = IWrappedVara(router.wrappedVara());
-
+    function transferValueToCaller(address caller, uint128 constructorBalance) public {
         if (constructorBalance != 0) {
-            bool success = wrappedVara.transfer(caller, constructorBalance);
+            (bool success,) = caller.call{value: constructorBalance}("");
             require(success, "Transfer failed");
         }
     }
@@ -117,24 +105,18 @@ contract EthAppWithEventsAbiScript is CommonBase, Script {
         console.log("                       Alternatively, run the following curl request.");
         console.log("```");
         uint256 chainId = block.chainid;
-        if (chainId == 1) {
-            console.log("curl --request POST 'https://api.etherscan.io/api' \\");
-        } else {
-            console.log(
-                string.concat(
-                    "curl --request POST 'https://api-", vm.getChain(chainId).chainAlias, ".etherscan.io/api' \\"
-                )
-            );
-        }
-        console.log("   --header 'Content-Type: application/x-www-form-urlencoded' \\");
-        console.log("   --data-urlencode 'module=contract' \\");
-        console.log("   --data-urlencode 'action=verifyproxycontract' \\");
-        console.log(string.concat("   --data-urlencode 'address=", vm.toString(contractAddress), "' \\"));
+        console.log("curl \\");
+        console.log(string.concat("    --data \"address=", vm.toString(contractAddress), "\" \\"));
+        console.log(string.concat("    --data \"expectedimplementation=", vm.toString(expectedImplementation), "\" \\"));
         console.log(
-            string.concat("   --data-urlencode 'expectedimplementation=", vm.toString(expectedImplementation), "' \\")
+            string.concat(
+                "    \"https://api.etherscan.io/v2/api?chainid=",
+                vm.toString(chainId),
+                "&module=contract&action=verifyproxycontract&apikey=$ETHERSCAN_API_KEY\""
+            )
         );
-        console.log("   --data-urlencode \"apikey=$ETHERSCAN_API_KEY\"");
         console.log("```");
         console.log("================================================================================================");
+        console.log();
     }
 }

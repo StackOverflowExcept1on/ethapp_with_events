@@ -13,6 +13,6 @@ contract EthAppWithEventsCallerTest is Test {
     }
 
     function test_Create() public {
-        ethAppWithEventsCaller.create(0);
+        ethAppWithEventsCaller.create{value: 0 ether}();
     }
 }

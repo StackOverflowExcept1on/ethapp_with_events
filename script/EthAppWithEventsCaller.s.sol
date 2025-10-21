@@ -27,8 +27,8 @@ contract EthAppWithEventsCallerScript is EthAppWithEventsAbiScript {
             executableBalanceTopUp(mirror, initialExecutableBalance);
 
             EthAppWithEventsCaller ethAppWithEventsCaller = new EthAppWithEventsCaller(IEthAppWithEvents(mirror));
-            transferValueToCaller(mirror, address(ethAppWithEventsCaller), constructorBalance);
-            ethAppWithEventsCaller.create(constructorBalance);
+            transferValueToCaller(address(ethAppWithEventsCaller), constructorBalance);
+            ethAppWithEventsCaller.create{value: constructorBalance}();
         } else if (vm.envExists("GEAR_EXE_PROGRAM")) {
             address gearExeProgram = vm.envAddress("GEAR_EXE_PROGRAM");
 

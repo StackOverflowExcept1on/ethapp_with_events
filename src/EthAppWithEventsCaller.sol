@@ -3,9 +3,6 @@ pragma solidity ^0.8.30;
 
 import {IEthAppWithEvents} from "./IEthAppWithEvents.sol";
 import {IEthAppWithEventsCallbacks} from "./IEthAppWithEventsCallbacks.sol";
-import {IMirror} from "./IMirror.sol";
-import {IRouter} from "./IRouter.sol";
-import {IWrappedVara} from "./IWrappedVara.sol";
 
 contract EthAppWithEventsCaller is IEthAppWithEventsCallbacks {
     IEthAppWithEvents public immutable GEAR_EXE_PROGRAM;
@@ -15,8 +12,12 @@ contract EthAppWithEventsCaller is IEthAppWithEventsCallbacks {
     }
 
     modifier onlyGearExeProgram() {
-        require(msg.sender == address(GEAR_EXE_PROGRAM), "Only Gear.exe program can call this function");
+        _onlyGearExeProgram();
         _;
+    }
+
+    function _onlyGearExeProgram() internal view {
+        require(msg.sender == address(GEAR_EXE_PROGRAM), "Only Gear.exe program can call this function");
     }
 
     /* call program constructor on Gear.exe */
@@ -25,16 +26,8 @@ contract EthAppWithEventsCaller is IEthAppWithEventsCallbacks {
 
     mapping(bytes32 messageId => bool knownMessage) public createInputs;
 
-    function create(uint128 value) external {
-        if (value != 0) {
-            IMirror mirror = IMirror(address(GEAR_EXE_PROGRAM));
-            IRouter router = IRouter(mirror.router());
-            IWrappedVara wrappedVara = IWrappedVara(router.wrappedVara());
-
-            wrappedVara.approve(address(GEAR_EXE_PROGRAM), value);
-        }
-
-        bytes32 messageId = GEAR_EXE_PROGRAM.create(value, true);
+    function create() external payable {
+        bytes32 messageId = GEAR_EXE_PROGRAM.create{value: msg.value}(true);
         createInputs[messageId] = true;
     }
 
@@ -52,7 +45,7 @@ contract EthAppWithEventsCaller is IEthAppWithEventsCallbacks {
     mapping(bytes32 inputHash => uint32 output) public svc1DoThisResults;
 
     function svc1DoThis(uint32 p1, string calldata p2) external {
-        bytes32 messageId = GEAR_EXE_PROGRAM.svc1DoThis(0, true, p1, p2);
+        bytes32 messageId = GEAR_EXE_PROGRAM.svc1DoThis{value: 0}(true, p1, p2);
         /// forge-lint: disable-next-line(asm-keccak256)
         bytes32 inputHash = keccak256(abi.encodePacked(p1, p2));
         svc1DoThisInputs[messageId] = inputHash;
@@ -76,7 +69,7 @@ contract EthAppWithEventsCaller is IEthAppWithEventsCallbacks {
     mapping(bool input => bool output) public svc1ThisResults;
 
     function svc1This(bool p1) external {
-        bytes32 messageId = GEAR_EXE_PROGRAM.svc1This(0, true, p1);
+        bytes32 messageId = GEAR_EXE_PROGRAM.svc1This{value: 0 ether}(true, p1);
         svc1ThisInputs[messageId] = p1;
     }
 
@@ -97,4 +90,6 @@ contract EthAppWithEventsCaller is IEthAppWithEventsCallbacks {
     function onErrorReply(bytes32 messageId, bytes calldata payload, bytes4 replyCode) external onlyGearExeProgram {
         emit ErrorReply(messageId, payload, replyCode);
     }
+
+    receive() external payable {}
 }
