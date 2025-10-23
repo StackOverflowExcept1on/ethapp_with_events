@@ -84,13 +84,6 @@ contract EthAppWithEventsAbiScript is CommonBase, Script {
         }
     }
 
-    function transferValueToCaller(address caller, uint128 constructorBalance) public {
-        if (constructorBalance != 0) {
-            (bool success,) = caller.call{value: constructorBalance}("");
-            require(success, "Transfer failed");
-        }
-    }
-
     function printContractInfo(string memory contractName, address contractAddress, address expectedImplementation)
         public
         view

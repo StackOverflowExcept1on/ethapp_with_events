@@ -21,13 +21,13 @@ contract EthAppWithEventsCallerScript is EthAppWithEventsAbiScript {
             ) = parseEnv();
 
             address ethAppWithEventsCallerAddress =
-                vm.computeCreateAddress(deployerAddress, vm.getNonce(deployerAddress) + 2);
+                vm.computeCreateAddress(deployerAddress, vm.getNonce(deployerAddress) + 4);
 
             address mirror = deployAbiWithInitializer(routerAddress, validatedCodeId, ethAppWithEventsCallerAddress);
             executableBalanceTopUp(mirror, initialExecutableBalance);
 
-            EthAppWithEventsCaller ethAppWithEventsCaller = new EthAppWithEventsCaller(IEthAppWithEvents(mirror));
-            transferValueToCaller(address(ethAppWithEventsCaller), constructorBalance);
+            EthAppWithEventsCaller ethAppWithEventsCaller =
+                new EthAppWithEventsCaller{value: constructorBalance}(IEthAppWithEvents(mirror));
             ethAppWithEventsCaller.create{value: constructorBalance}();
         } else if (vm.envExists("GEAR_EXE_PROGRAM")) {
             address gearExeProgram = vm.envAddress("GEAR_EXE_PROGRAM");

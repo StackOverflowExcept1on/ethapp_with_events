@@ -7,7 +7,7 @@ import {IEthAppWithEventsCallbacks} from "./IEthAppWithEventsCallbacks.sol";
 contract EthAppWithEventsCaller is IEthAppWithEventsCallbacks {
     IEthAppWithEvents public immutable GEAR_EXE_PROGRAM;
 
-    constructor(IEthAppWithEvents _gearExeProgram) {
+    constructor(IEthAppWithEvents _gearExeProgram) payable {
         GEAR_EXE_PROGRAM = _gearExeProgram;
     }
 
@@ -90,6 +90,4 @@ contract EthAppWithEventsCaller is IEthAppWithEventsCallbacks {
     function onErrorReply(bytes32 messageId, bytes calldata payload, bytes4 replyCode) external onlyGearExeProgram {
         emit ErrorReply(messageId, payload, replyCode);
     }
-
-    receive() external payable {}
 }
