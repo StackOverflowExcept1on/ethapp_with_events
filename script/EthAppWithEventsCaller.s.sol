@@ -29,10 +29,10 @@ contract EthAppWithEventsCallerScript is EthAppWithEventsAbiScript {
             EthAppWithEventsCaller ethAppWithEventsCaller =
                 new EthAppWithEventsCaller{value: constructorBalance}(IEthAppWithEvents(mirror));
             ethAppWithEventsCaller.create{value: constructorBalance}();
-        } else if (vm.envExists("GEAR_EXE_PROGRAM")) {
-            address gearExeProgram = vm.envAddress("GEAR_EXE_PROGRAM");
+        } else if (vm.envExists("VARA_ETH_PROGRAM")) {
+            address varaEthProgram = vm.envAddress("VARA_ETH_PROGRAM");
 
-            new EthAppWithEventsCaller(IEthAppWithEvents(gearExeProgram));
+            new EthAppWithEventsCaller(IEthAppWithEvents(varaEthProgram));
         } else {
             revert();
         }
