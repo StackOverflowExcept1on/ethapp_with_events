@@ -3,10 +3,10 @@ pragma solidity ^0.8.30;
 
 import {CommonBase} from "forge-std/Base.sol";
 import {Script, console} from "forge-std/Script.sol";
-import {IEthAppWithEvents, EthAppWithEventsAbi} from "../src/EthAppWithEventsAbi.sol";
-import {IMirror} from "../src/IMirror.sol";
-import {IRouter} from "../src/IRouter.sol";
-import {IWrappedVara} from "../src/IWrappedVara.sol";
+import {IEthAppWithEvents, EthAppWithEventsAbi} from "src/EthAppWithEventsAbi.sol";
+import {IMirror} from "src/IMirror.sol";
+import {IRouter} from "src/IRouter.sol";
+import {IWrappedVara} from "src/IWrappedVara.sol";
 
 contract EthAppWithEventsAbiScript is CommonBase, Script {
     function setUp() public virtual {}

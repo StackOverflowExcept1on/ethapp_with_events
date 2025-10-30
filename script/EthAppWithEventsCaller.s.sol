@@ -2,7 +2,7 @@
 pragma solidity ^0.8.30;
 
 import {EthAppWithEventsAbiScript} from "./EthAppWithEventsAbi.s.sol";
-import {IEthAppWithEvents, EthAppWithEventsCaller} from "../src/EthAppWithEventsCaller.sol";
+import {IEthAppWithEvents, EthAppWithEventsCaller} from "src/EthAppWithEventsCaller.sol";
 
 contract EthAppWithEventsCallerScript is EthAppWithEventsAbiScript {
     function setUp() public override {}

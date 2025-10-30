@@ -2,7 +2,7 @@
 pragma solidity ^0.8.30;
 
 import {Test} from "forge-std/Test.sol";
-import {EthAppWithEventsAbi} from "../src/EthAppWithEventsAbi.sol";
+import {EthAppWithEventsAbi} from "src/EthAppWithEventsAbi.sol";
 
 contract EthAppWithEventsAbiTest is Test {
     EthAppWithEventsAbi public ethAppWithEventsAbi;
