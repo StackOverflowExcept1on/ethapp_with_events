@@ -6,9 +6,11 @@ interface IEthAppWithEvents {
 
     // TODO: should it generate `payable` functions?
 
-    function create(bool encodeReply) external payable returns (bytes32 messageId);
+    function create(bool callReply) external payable returns (bytes32 messageId);
 
-    function svc1DoThis(bool encodeReply, uint32 p1, string calldata p2) external payable returns (bytes32 messageId);
+    function svc1DoThis(bool callReply, uint32 p1, string calldata p2) external payable returns (bytes32 messageId);
 
-    function svc1This(bool encodeReply, bool p1) external payable returns (bytes32 messageId);
+    function svc1This(bool callReply, bool p1) external payable returns (bytes32 messageId);
+
+    function svc2DoThis(bool callReply, uint32 p1, string calldata p2) external payable returns (bytes32 messageId);
 }
