@@ -111,7 +111,7 @@ contract EthAppWithEventsCaller is IEthAppWithEventsCallbacks {
         svc2DoThisResults[inputHash] = r1;
     }
 
-    function getsvc2DoThisResult(uint32 p1, string calldata p2) public view returns (uint32) {
+    function getSvc2DoThisResult(uint32 p1, string calldata p2) public view returns (uint32) {
         /// forge-lint: disable-next-line(asm-keccak256)
         bytes32 inputHash = keccak256(abi.encodePacked(p1, p2));
         return svc2DoThisResults[inputHash];
