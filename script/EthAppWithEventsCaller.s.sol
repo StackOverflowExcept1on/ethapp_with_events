@@ -13,12 +13,7 @@ contract EthAppWithEventsCallerScript is EthAppWithEventsAbiScript {
         vm.startBroadcast(privateKey);
 
         if (hasEnv()) {
-            (
-                address routerAddress,
-                bytes32 validatedCodeId,
-                uint128 initialExecutableBalance,
-                uint128 constructorBalance
-            ) = parseEnv();
+            (address routerAddress, bytes32 validatedCodeId, uint128 initialExecutableBalance) = parseEnv();
 
             address ethAppWithEventsCallerAddress =
                 vm.computeCreateAddress(deployerAddress, vm.getNonce(deployerAddress) + 4);
@@ -26,9 +21,8 @@ contract EthAppWithEventsCallerScript is EthAppWithEventsAbiScript {
             address mirror = deployAbiWithInitializer(routerAddress, validatedCodeId, ethAppWithEventsCallerAddress);
             executableBalanceTopUp(mirror, initialExecutableBalance);
 
-            EthAppWithEventsCaller ethAppWithEventsCaller =
-                new EthAppWithEventsCaller{value: constructorBalance}(IEthAppWithEvents(mirror));
-            ethAppWithEventsCaller.create{value: constructorBalance}();
+            EthAppWithEventsCaller ethAppWithEventsCaller = new EthAppWithEventsCaller(IEthAppWithEvents(mirror));
+            ethAppWithEventsCaller.create();
         } else if (vm.envExists("VARA_ETH_PROGRAM")) {
             address varaEthProgram = vm.envAddress("VARA_ETH_PROGRAM");
 

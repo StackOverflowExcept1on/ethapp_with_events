@@ -12,6 +12,6 @@ contract EthAppWithEventsAbiTest is Test {
     }
 
     function test_Create() public {
-        ethAppWithEventsAbi.create{value: 0 ether}(false);
+        ethAppWithEventsAbi.create(false);
     }
 }

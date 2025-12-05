@@ -3,7 +3,7 @@ pragma solidity ^0.8.30;
 
 import {CommonBase} from "forge-std/Base.sol";
 import {Script, console} from "forge-std/Script.sol";
-import {IEthAppWithEvents, EthAppWithEventsAbi} from "src/EthAppWithEventsAbi.sol";
+import {EthAppWithEventsAbi} from "src/EthAppWithEventsAbi.sol";
 import {IMirror} from "src/IMirror.sol";
 import {IRouter} from "src/IRouter.sol";
 import {IWrappedVara} from "src/IWrappedVara.sol";
@@ -15,35 +15,27 @@ contract EthAppWithEventsAbiScript is CommonBase, Script {
         uint256 privateKey = vm.envUint("PRIVATE_KEY");
         vm.startBroadcast(privateKey);
 
-        (address routerAddress, bytes32 validatedCodeId, uint128 initialExecutableBalance, uint128 constructorBalance) =
-            parseEnv();
+        (address routerAddress, bytes32 validatedCodeId, uint128 initialExecutableBalance) = parseEnv();
 
         address mirror = deployAbi(routerAddress, validatedCodeId);
         executableBalanceTopUp(mirror, initialExecutableBalance);
-        callConstructorWithValue(mirror, constructorBalance);
 
         vm.stopBroadcast();
     }
 
     function hasEnv() public view returns (bool) {
         return vm.envExists("ROUTER_ADDRESS") && vm.envExists("VALIDATED_CODE_ID")
-            && vm.envExists("INITIAL_EXECUTABLE_BALANCE") && vm.envExists("CONSTRUCTOR_BALANCE");
+            && vm.envExists("INITIAL_EXECUTABLE_BALANCE");
     }
 
     function parseEnv()
         public
         view
-        returns (
-            address routerAddress,
-            bytes32 validatedCodeId,
-            uint128 initialExecutableBalance,
-            uint128 constructorBalance
-        )
+        returns (address routerAddress, bytes32 validatedCodeId, uint128 initialExecutableBalance)
     {
         routerAddress = vm.envAddress("ROUTER_ADDRESS");
         validatedCodeId = vm.envBytes32("VALIDATED_CODE_ID");
         initialExecutableBalance = uint128(vm.envUint("INITIAL_EXECUTABLE_BALANCE"));
-        constructorBalance = uint128(vm.envUint("CONSTRUCTOR_BALANCE"));
     }
 
     function deployAbi(address routerAddress, bytes32 validatedCodeId) public returns (address) {
@@ -75,12 +67,6 @@ contract EthAppWithEventsAbiScript is CommonBase, Script {
             wrappedVara.approve(mirror, initialExecutableBalance);
 
             IMirror(mirror).executableBalanceTopUp(initialExecutableBalance);
-        }
-    }
-
-    function callConstructorWithValue(address mirror, uint128 constructorBalance) public {
-        if (constructorBalance != 0) {
-            IEthAppWithEvents(mirror).create{value: constructorBalance}(false);
         }
     }
 

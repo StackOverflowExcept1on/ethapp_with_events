@@ -5,12 +5,9 @@ import {IEthAppWithEvents} from "./IEthAppWithEvents.sol";
 import {IEthAppWithEventsCallbacks} from "./IEthAppWithEventsCallbacks.sol";
 
 contract EthAppWithEventsCaller is IEthAppWithEventsCallbacks {
-    // TODO: should it generate `payable` functions?
-    // (for svc1DoThis, svc1This, svc2DoThis)
-
     IEthAppWithEvents public immutable VARA_ETH_PROGRAM;
 
-    constructor(IEthAppWithEvents _varaEthProgram) payable {
+    constructor(IEthAppWithEvents _varaEthProgram) {
         VARA_ETH_PROGRAM = _varaEthProgram;
     }
 
@@ -35,13 +32,13 @@ contract EthAppWithEventsCaller is IEthAppWithEventsCallbacks {
 
     mapping(bytes32 messageId => bool knownMessage) public createInputs;
 
-    function create() external payable {
-        bytes32 messageId = VARA_ETH_PROGRAM.create{value: msg.value}(true);
+    function create() external {
+        bytes32 messageId = VARA_ETH_PROGRAM.create(true);
         createInputs[messageId] = true;
     }
 
     /// forge-lint: disable-next-line(mixed-case-function)
-    function replyOn_create(bytes32 messageId) external payable onlyVaraEthProgram {
+    function replyOn_create(bytes32 messageId) external onlyVaraEthProgram {
         bool knownMessage = createInputs[messageId];
         if (!knownMessage) {
             revert UnknownMessage();
@@ -54,15 +51,15 @@ contract EthAppWithEventsCaller is IEthAppWithEventsCallbacks {
     mapping(bytes32 messageId => bytes32 inputHash) public svc1DoThisInputs;
     mapping(bytes32 inputHash => uint32 output) public svc1DoThisResults;
 
-    function svc1DoThis(uint32 p1, string calldata p2) external payable {
-        bytes32 messageId = VARA_ETH_PROGRAM.svc1DoThis{value: msg.value}(true, p1, p2);
+    function svc1DoThis(uint32 p1, string calldata p2) external {
+        bytes32 messageId = VARA_ETH_PROGRAM.svc1DoThis(true, p1, p2);
         /// forge-lint: disable-next-line(asm-keccak256)
         bytes32 inputHash = keccak256(abi.encodePacked(p1, p2));
         svc1DoThisInputs[messageId] = inputHash;
     }
 
     /// forge-lint: disable-next-line(mixed-case-function)
-    function replyOn_svc1DoThis(bytes32 messageId, uint32 r1) external payable onlyVaraEthProgram {
+    function replyOn_svc1DoThis(bytes32 messageId, uint32 r1) external onlyVaraEthProgram {
         bytes32 inputHash = svc1DoThisInputs[messageId];
         svc1DoThisResults[inputHash] = r1;
     }
@@ -78,13 +75,13 @@ contract EthAppWithEventsCaller is IEthAppWithEventsCallbacks {
     mapping(bytes32 messageId => bool input) public svc1ThisInputs;
     mapping(bool input => bool output) public svc1ThisResults;
 
-    function svc1This(bool p1) external payable {
-        bytes32 messageId = VARA_ETH_PROGRAM.svc1This{value: msg.value}(true, p1);
+    function svc1This(bool p1) external {
+        bytes32 messageId = VARA_ETH_PROGRAM.svc1This(true, p1);
         svc1ThisInputs[messageId] = p1;
     }
 
     /// forge-lint: disable-next-line(mixed-case-function)
-    function replyOn_svc1This(bytes32 messageId, bool r1) external payable onlyVaraEthProgram {
+    function replyOn_svc1This(bytes32 messageId, bool r1) external onlyVaraEthProgram {
         bool p1 = svc1ThisInputs[messageId];
         svc1ThisResults[p1] = r1;
     }
@@ -98,15 +95,15 @@ contract EthAppWithEventsCaller is IEthAppWithEventsCallbacks {
     mapping(bytes32 messageId => bytes32 inputHash) public svc2DoThisInputs;
     mapping(bytes32 inputHash => uint32 output) public svc2DoThisResults;
 
-    function svc2DoThis(uint32 p1, string calldata p2) external payable {
-        bytes32 messageId = VARA_ETH_PROGRAM.svc2DoThis{value: msg.value}(true, p1, p2);
+    function svc2DoThis(uint32 p1, string calldata p2) external {
+        bytes32 messageId = VARA_ETH_PROGRAM.svc2DoThis(true, p1, p2);
         /// forge-lint: disable-next-line(asm-keccak256)
         bytes32 inputHash = keccak256(abi.encodePacked(p1, p2));
         svc2DoThisInputs[messageId] = inputHash;
     }
 
     /// forge-lint: disable-next-line(mixed-case-function)
-    function replyOn_svc2DoThis(bytes32 messageId, uint32 r1) external payable onlyVaraEthProgram {
+    function replyOn_svc2DoThis(bytes32 messageId, uint32 r1) external onlyVaraEthProgram {
         bytes32 inputHash = svc2DoThisInputs[messageId];
         svc2DoThisResults[inputHash] = r1;
     }

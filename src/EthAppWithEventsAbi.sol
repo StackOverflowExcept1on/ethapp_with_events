@@ -4,13 +4,11 @@ pragma solidity ^0.8.30;
 import {IEthAppWithEvents} from "./IEthAppWithEvents.sol";
 
 contract EthAppWithEventsAbi is IEthAppWithEvents {
-    // TODO: should it generate `payable` functions?
+    function create(bool callReply) external returns (bytes32 messageId) {}
 
-    function create(bool callReply) external payable returns (bytes32 messageId) {}
+    function svc1DoThis(bool callReply, uint32 p1, string calldata p2) external returns (bytes32 messageId) {}
 
-    function svc1DoThis(bool callReply, uint32 p1, string calldata p2) external payable returns (bytes32 messageId) {}
+    function svc1This(bool callReply, bool p1) external returns (bytes32 messageId) {}
 
-    function svc1This(bool callReply, bool p1) external payable returns (bytes32 messageId) {}
-
-    function svc2DoThis(bool callReply, uint32 p1, string calldata p2) external payable returns (bytes32 messageId) {}
+    function svc2DoThis(bool callReply, uint32 p1, string calldata p2) external returns (bytes32 messageId) {}
 }
